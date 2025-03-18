@@ -84,5 +84,28 @@ def preprocess_dataset(dataset_name: str = "gsm8k",
             "answer": x["answerKey"]
         })
         return dataset
+    elif dataset_name == "krapivin":
+        dataset: Dataset = load_dataset("midas/krapivin", "raw")[split] # type: ignore
+        
+        base_prompt = """
+        Given the following text, extract the most relevant keywords or keyphrases that best summarize its content.
+        Try to minimize overlap of concepts in keyphrases.
+
+        Return the keywords as a comma-separated list of phrases.
+        Text:
+        {}
+        Keywords:
+        """
+        
+        dataset = dataset.map(lambda x: {
+            "prompt": format_prompt(
+                base_prompt.format(" ".join(x["document"])), 
+                system_prompt, 
+                few_shot, 
+                fewshot_prob
+            ),
+            "answer": ", ".join(x["extractive_keyphrases"] + x["abstractive_keyphrases"])
+        })
+        return dataset
     else:
         raise ValueError(f"Dataset {dataset_name} not supported for preprocess_dataset.")
