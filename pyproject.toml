@@ -20,4 +20,7 @@ dependencies = [
     "liger-kernel>=0.5.2",
     "vllm>=0.7.3",
     "brave-search>=0.1.8",
+    "scikit-learn>=1.6.1",
+    "sentence-transformers>=3.4.1",
+    "scipy>=1.15.2",
 ]
